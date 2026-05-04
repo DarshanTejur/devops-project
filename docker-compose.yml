@@ -1,9 +1,10 @@
-version: '3.8'
 services:
   database:
     image: mongo:latest
     ports:
       - "27017:27017"
+    networks:
+      - app-network
 
   backend:
     build: ./backend
@@ -11,6 +12,8 @@ services:
       - "3000:3000"
     depends_on:
       - database
+    networks:
+      - app-network
 
   frontend:
     build: ./frontend
@@ -18,3 +21,18 @@ services:
       - "80:80"
     depends_on:
       - backend
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
