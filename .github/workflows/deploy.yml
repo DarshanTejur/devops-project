@@ -4,7 +4,7 @@ on:
     branches: [ main, feature/verify-ci-pipeline ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # This adds a manual "Run" button!
+  workflow_dispatch: # Allows you to trigger it manually via the Actions tab
 
 jobs:
   build-test:
@@ -14,14 +14,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: List files for debugging
+        run: ls -R
+
       - name: Build Local Images
         run: |
-          docker-compose build
+          # Modern Docker CLI uses 'compose' without the hyphen
+          docker compose build
           
       - name: Verify Service Health
         run: |
-          docker-compose up -d
-          sleep 10
-          # We use the internal container name or localhost
+          # Start containers in detached mode
+          docker compose up -d
+          # Give services time to initialize
+          sleep 15
+          # Test the backend API health
           curl -f http://localhost:3000/api || exit 1
-          echo "Local CI Check Passed!"
+          echo "Local CI Check Passed: Phase 1 Complete!"
