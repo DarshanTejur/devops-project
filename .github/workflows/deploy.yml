@@ -1,7 +1,7 @@
 name: Local CI Baseline
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature/verify-ci-pipeline ] # Add your branch here!
   pull_request:
     branches: [ main ]
 
