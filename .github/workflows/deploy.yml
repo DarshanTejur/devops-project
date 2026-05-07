@@ -1,10 +1,14 @@
 name: Local CI Baseline
 on:
   push:
-    branches: [ main, feature/verify-ci-pipeline ]
+    branches: 
+      - main
+      - feature/local-stabilization
+      - local-phase1-stable  # This ensures Phase 1 is always verified
   pull_request:
-    branches: [ main ]
-  workflow_dispatch: # Allows you to trigger it manually via the Actions tab
+    branches:
+      - main
+  workflow_dispatch: # Keeps the manual "Run" button active
 
 jobs:
   build-test:
@@ -14,20 +18,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: List files for debugging
-        run: ls -R
-
       - name: Build Local Images
         run: |
-          # Modern Docker CLI uses 'compose' without the hyphen
+          # Uses the modern Docker CLI
           docker compose build
           
       - name: Verify Service Health
         run: |
-          # Start containers in detached mode
           docker compose up -d
-          # Give services time to initialize
           sleep 15
-          # Test the backend API health
+          # Final verification check
           curl -f http://localhost:3000/api || exit 1
-          echo "Local CI Check Passed: Phase 1 Complete!"
+          echo "Local CI Check Passed!"
