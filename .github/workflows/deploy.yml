@@ -1,9 +1,10 @@
 name: Local CI Baseline
 on:
   push:
-    branches: [ main, feature/verify-ci-pipeline ] # Add your branch here!
+    branches: [ main, feature/verify-ci-pipeline ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: # This adds a manual "Run" button!
 
 jobs:
   build-test:
@@ -13,21 +14,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Build Local Images
         run: |
-          # This simulates exactly what happens on your MacBook
-          # If there is a syntax error in server.js or App.js, this step will FAIL.
           docker-compose build
           
       - name: Verify Service Health
         run: |
-          # Start the containers in the CI environment
           docker-compose up -d
-          # Give them 10 seconds to wake up
           sleep 10
-          # Check if the backend is actually responding
+          # We use the internal container name or localhost
           curl -f http://localhost:3000/api || exit 1
-          echo "Local CI Check Passed: Services are healthy!"
+          echo "Local CI Check Passed!"
