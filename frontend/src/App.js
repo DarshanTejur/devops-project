@@ -44,7 +44,7 @@ function App() {
   return (
     <div style={{ backgroundColor: '#0f172a', color: 'white', minHeight: '100vh', padding: '40px', fontFamily: 'sans-serif' }}>
       <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2rem', margin: '0' }}>PProject Dashboard</h1>
+        <h1 style={{ fontSize: '2rem', margin: '0' }}>Project Dashboard</h1>
         <p style={{ color: '#94a3b8' }}>Infrastructure: AWS EC2 | Container: Docker | DB: MongoDB</p>
       </header>
       
