@@ -10,6 +10,8 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/devops_db
     depends_on:
       - database
     networks:
@@ -19,6 +21,8 @@ services:
     build: ./frontend
     ports:
       - "80:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000/api
     depends_on:
       - backend
     networks:
